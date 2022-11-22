@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+
+  <title>Frontend Mentor | Advice generator app</title>
+
+  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@800&display=swap');
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background-color: var(--Dark-Blue);
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-direction: column;
+      /* padding: 0 1rem; */
+    }
+
+    :root {
+      --Light-Cyan: hsl(193, 38%, 86%);
+      --Neon-Green: hsl(150, 100%, 66%);
+      --Grayish-Blue: hsl(217, 19%, 38%);
+      --Dark-Grayish-Blue: hsl(217, 19%, 24%);
+      --Dark-Blue: hsl(218, 23%, 16%);
+    }
+
+    main {
+      background-color: var(--Dark-Grayish-Blue);
+      border-radius: 10px;
+      padding: 3rem 2rem 4rem 2rem;
+      
+      max-width: 500px;
+        display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+    main h3 {
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--Neon-Green);
+      font-size: 1rem;
+      font-weight: 100 !important;
+      margin-bottom: 0;
+    }
+
+    main blockquote {
+      font-size: 28px;
+      text-align: center;
+      color: var(--Light-Cyan);
+    }
+
+    .dice {
+      padding: 15px 18px;
+      border-radius: 50%;
+      background-color: var(--Neon-Green);
+      margin-top: -2rem;
+    }
+
+    .dice:hover {
+      box-shadow: 0px 0px 15px 5px var(--Neon-Green);
+      cursor: pointer;
+    }
+ 
+    @media(max-width:600px){
+      .main{
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <main>
+    <h3>ADVICE # <span class="advice-id">0</span></h3>
+    <blockquote class="advice">Click the dice for new advice</blockquote>
+
+
+    <!-- <img src="./images/pattern-divider-desktop.svg" alt=""> -->
+
+    <picture>
+      <source media="(min-width:600px)" srcset="./images/pattern-divider-desktop.svg">
+    
+      <img src="./images/pattern-divider-mobile.svg" alt="Flowers" style="width:auto;">
+    </picture>
+
+
+  </main>
+
+  <div class="dice">
+    <img src="./images/icon-dice.svg" alt="">
+  </div>
+
+
+
+  <script>
+    const URL = "https://api.adviceslip.com/advice"
+    const xhr = new XMLHttpRequest();
+    const adviceId = document.querySelector(".advice-id")
+    const advice = document.querySelector(".advice")
+    const nextAdvice = document.querySelector(".dice")
+
+
+nextAdvice.addEventListener("click",function(){
+function sendRequest(method, url) {
+    return new Promise(function(resolve, reject){
+        const xhr = new XMLHttpRequest();
+        xhr.open(method,url);
+
+        xhr.onload = function(){
+            if(xhr.status >= 200 && xhr.status < 300){
+                resolve(xhr.response)
+            }
+            else{
+                reject(new Error("something went wrong"));
+            }
+        }
+xhr.onerror = function(){
+    reject(new Error("sth went wrong"))
+}
+
+xhr.send();
+    })
+}
+sendRequest("GET",URL)
+.then(response =>{
+  let data = JSON.parse(response)
+  return data;
+  // console.log(data.slip.id)
+}).then(data =>{
+  const id = data.slip.id
+  const nowAdvice = data.slip.advice
+  adviceId.innerHTML = id
+  advice.innerHTML = nowAdvice;
+})
+
+})
+
+  </script>
+</body>
+
+</html>
